@@ -1,0 +1,6 @@
+
+# http://localhost:4000
+
+# http://localhost:4000/api/averageScores
+
+http://192.168.8.104:4000/averageGenderScores
