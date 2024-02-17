@@ -53,5 +53,123 @@ SELECT
     res.json(avg_score);
   });
 });
+router.get('/AverageScoreGen', (req, res) => {
+  const sql2 = `SELECT 
+    sex,
+    (SUM(CASE WHEN G1 > 10 THEN 1 ELSE 0 END) * 100.0 / COUNT(*)) AS G1_percentage,
+    (SUM(CASE WHEN G2 > 10 THEN 1 ELSE 0 END) * 100.0 / COUNT(*)) AS G2_percentage,
+    (SUM(CASE WHEN G3 > 10 THEN 1 ELSE 0 END) * 100.0 / COUNT(*)) AS G3_percentage
+FROM student
+GROUP BY sex;`;
+  db.all(sql2, [], (err, rows) => {
+    if (err) {
+      console.error(err.message);
+      res.status(500).json({ error: 'Internal Server Error' });
+      return;
+    }
+    if (rows.length === 0) {
+      res.status(404).json({ error: 'No data found' });
+      return;
+    }
+    const percent = rows.map((row) => ({
+      sex: row.sex,
+      G1: row.G1_percentage,
+      G2: row.G2_percentage,
+      G3: row.G3_percentage,
+    }));
+    res.json(percent);
+  });
+});
+// performance by parental work
+router.get('/parent', (req, res) => {
+  const sql = `
+ SELECT parent_job,
+       SUM(CASE WHEN parent_type = 'Father' THEN count ELSE 0 END) AS father_count,
+       SUM(CASE WHEN parent_type = 'Mother' THEN count ELSE 0 END) AS mother_count,
+       SUM(count) AS total_count
+FROM (
+    SELECT 'Father' AS parent_type,
+           Fjob_id AS parent_job,
+           COUNT(*) AS count
+    FROM student
+    WHERE sex = 'F'
+    GROUP BY Fjob_id
+
+    UNION ALL
+
+    SELECT 'Mother' AS parent_type,
+           Mjob_id AS parent_job,
+           COUNT(*) AS count
+    FROM student
+    WHERE sex = 'F'
+    GROUP BY Mjob_id
+) AS subquery
+GROUP BY parent_job;
+`;
+  db.all(sql, [], (err, rows) => {
+    if (err) {
+      console.error(err.message);
+      res.status(500).json({ error: 'Internal Server Error' });
+      return;
+    }
+
+    if (rows.length === 0) {
+      res.status(404).json({ error: 'No data found' });
+      return;
+    }
+
+    const parents = rows.map((row) => ({
+      parent_job: row.parent_job,
+      count: row.total_count,
+    }));
+
+    res.json(parents);
+  });
+});
+router.get('/parentM', (req, res) => {
+  const sql5 = `
+ SELECT parent_job,
+       SUM(CASE WHEN parent_type = 'Father' THEN count ELSE 0 END) AS father_count,
+       SUM(CASE WHEN parent_type = 'Mother' THEN count ELSE 0 END) AS mother_count,
+       SUM(count) AS total_count_m
+FROM (
+    SELECT 'Father' AS parent_type,
+           Fjob_id AS parent_job,
+           COUNT(*) AS count
+    FROM student
+    WHERE sex = 'M'
+    GROUP BY Fjob_id
+
+    UNION ALL
+
+    SELECT 'Mother' AS parent_type,
+           Mjob_id AS parent_job,
+           COUNT(*) AS count
+    FROM student
+    WHERE sex = 'M'
+    GROUP BY Mjob_id
+) AS subquery
+GROUP BY parent_job;
+`;
+  db.all(sql5, [], (err, rows) => {
+    if (err) {
+      console.error(err.message);
+      res.status(500).json({ error: 'Internal Server Error' });
+      return;
+    }
+
+    if (rows.length === 0) {
+      res.status(404).json({ error: 'No data found' });
+      return;
+    }
+
+    const parents = rows.map((row) => ({
+      parent_job: row.parent_job,
+      total_count_m: row.total_count_m,
+    }));
+
+    res.json(parents);
+  });
+});
 
 module.exports = router;
