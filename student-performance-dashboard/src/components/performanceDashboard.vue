@@ -4,59 +4,47 @@ import barChart from './barChart.vue';
 import parentTable from './parentTable.vue';
 </script>
 <template>
-  <header>
-    <div>
-      <div class="w-[100%] h-16 bg-slate-500"></div>
-      <div class="text text-center mb-9">Student Perfomance Dashboard</div>
+  <header class="bg-slate-500">
+    <div class="content flex gap-12 w-full">
+      <img
+        src="../assets/dashboard .png "
+        class="object-cover ml-12 w-14 h-14"
+        alt="logo"
+      />
+      <div class="text-xl py-3 px-40">Student Perfomance Dashboard</div>
     </div>
   </header>
-  <div class="container">
-    <!-- will split the page into to sides rigth and left side -->
-    <div class="flex flex-col lg:flex-row">
-      <!-- this section will be the left section -->
-      <div class="w-1/2">
-        <!-- rendering the Bar Char that represent the average values for the subjects to the main web page -->
-        <h1>Average Students Grades</h1>
-        <barChart />
-      </div>
-
-      <!-- this section will be the right section -->
-      <div class="w-full lg:w-1/2 bg-gray-200 ml-4">
-        <!-- rendering the table that -->
-        <parentTable class="tableWidth" />
-      </div>
+  <!-- will split the page into to sides rigth and left side -->
+  <div class="flex flex-col md:flex-row">
+    <!-- this section will be the left section -->
+    <div class="w-full lg:w-1/2 ml-4">
+      <!-- rendering the Bar Char that represent the average values for the subjects to the main web page -->
+      <h1>Average Students Grades</h1>
+      <barChart />
+    </div>
+    <!-- this section will be the right section -->
+    <!-- rendering a table that will include student count depending on the parents work -->
+    <div class="w-full md:w-1/2 ml-4 mr-1">
+      <!-- rendering the table that -->
+      <h1>Count of student depending on the parent work</h1>
+      <parentTable />
     </div>
   </div>
-  <footer>
-    <div>
-      <div class="mt-10 w-[100%] h-16 bg-slate-500"></div>
-      <div class="text text-center">Dashboard</div>
+  <div>
+    <!-- this section will be the right section -->
+    <div class="w-full lg:w-3/4 ml-4">
+      <!-- Pie chart that represent the persentage of gender in the following -->
+      <h1>Gender precentage in the following classes</h1>
+      <pieChart />
+    </div>
+  </div>
+  <footer class="bg-slate-500">
+    <div class="flex-col gap-1 w-full">
+      <p class="pt-2 text-2xl font-sans text-center text-black">
+        Student Perfomance Dashboard
+      </p>
     </div>
   </footer>
 </template>
 
-<style>
-body {
-  /* margin-left: 10px; */
-  font-family: Arial, Helvetica, sans-serif;
-}
-header {
-  margin-left: -50px;
-}
-.text {
-  margin-top: -45px;
-}
-table {
-  width: 40%;
-  align-content: center;
-}
-.flex {
-  margin-right: 10px;
-}
-.container {
-  margin-left: 10px;
-}
-.tableWidth table {
-  width: 100%;
-}
-</style>
+<style></style>
